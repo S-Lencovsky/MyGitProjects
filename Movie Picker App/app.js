@@ -13,7 +13,7 @@ function fetchMovies(query) {
             displayMovies(data.Search);
         })
         .catch(error => console.error('Error fetching data:', error));
-}
+    }
 
 function fetchTrailer(imdbID) {
     fetch(`https://www.omdbapi.com/?i=${imdbID}&apikey=${apiKey}`)
