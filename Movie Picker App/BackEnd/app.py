@@ -1,9 +1,11 @@
 from flask import Flask, request, jsonify
+from flask_cors import CORS
 import pandas as pd
 from sklearn.metrics.pairwise import cosine_similarity
 from sklearn.feature_extraction.text import CountVectorizer
 
 app = Flask(__name__)
+CORS(app, resources={r"/*": {"origins": "*"}})  # Allow all origins
 
 # Dummy movie data
 movies = pd.DataFrame({
@@ -36,10 +38,14 @@ def get_movie_suggestions(user_genre):
 # API endpoint for movie suggestions
 @app.route('/suggest', methods=['POST'])
 def suggest():
-    user_data = request.json
-    genre = user_data.get('genre')
-    suggestions = get_movie_suggestions(genre)
-    return jsonify(suggestions)
+    try:
+        user_data = request.json
+        genre = user_data.get('genre')
+        suggestions = get_movie_suggestions(genre)
+        return jsonify(suggestions)
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
 
 if __name__ == '__main__':
     app.run(debug=True)
